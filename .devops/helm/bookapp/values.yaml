@@ -1,0 +1,89 @@
+ui:
+  fullnameOverride: "ui"
+  replicaCount: 1
+
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: ""
+
+  configmapData:
+    PORT: "80"
+
+  serviceAccount:
+    create: false
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+
+nameOverride: ""
+fullnameOverride: ""
+
+ingress:
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations: {}
+    hosts:
+      - host: demo.projects.tentech.vok.today
+        paths:
+          - path: /books
+            pathType: Prefix
+            backend:
+              service:
+                name: books
+                port:
+                  number: 8002
+          - path: /order
+            pathType: Prefix
+            backend:
+              service:
+                name: order
+                port:
+                  number: 8001
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ui
+                port:
+                  number: 80
+    tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+global:
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 80

@@ -12,13 +12,12 @@ on:
   workflow_dispatch:
 
 env:
-  ENVIRONMENT: ${{ github.ref_name }}
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  BASE_DOMAIN: ${{ vars.BASE_DOMAIN }}
-  APPLICATION_NAME: ${{ vars.APPLICATION_NAME }}
-  APPLICATION_NAMESPACE: ${{ vars.APPLICATION_NAMESPACE }}
-  CD_DESTINATION_OWNER: ${{ vars.CD_DESTINATION_OWNER }}
-  CD_PROJECT: ${{ vars.CD_PROJECT }}
+  ENVIRONMENT: prod
+  AWS_REGION: us-east-1
+  APPLICATION_NAME: bookapp
+  APPLICATION_NAMESPACE: application
+  CD_DESTINATION_OWNER: zibroo
+  CD_PROJECT: test-cd
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -72,7 +71,7 @@ jobs:
           helm template $APPLICATION_NAME .devops/helm/bookapp -f .devops/helm/bookapp/values.yaml  --create-namespace -n $APPLICATION_NAMESPACE --output-dir manifest \
             --set ui.image.repository=$REGISTRY/$ENVIRONMENT/ui \
             --set ui.image.tag=$SHA8 \
-            --set ingress.ingress.hosts[0].host=$APPLICATION_NAME.$ENVIRONMENT.$BASE_DOMAIN \
+            --set ingress.ingress.hosts[0].host=SOMEDOMAIN \
 
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
